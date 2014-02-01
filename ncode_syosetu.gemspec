@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "mechanize", "~> 2.7.3"
+  spec.add_dependency "gepub", "~> 0.6.4.6"
 
   spec.add_development_dependency "bundler", "~> 1.5.2"
   spec.add_development_dependency "rake"

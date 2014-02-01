@@ -7,6 +7,14 @@ module NcodeSyosetu
         @toc = toc
         @episodes = episodes
       end
+
+      [:title, :author, :abstract, :url].each do |method|
+        class_eval <<-EOS
+          def #{method}
+            @toc.#{method}
+          end
+        EOS
+      end
     end
   end
 end
