@@ -4,7 +4,7 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'ncode_syosetu'
 
 if ARGV.size == 0
-  puts "#{__FILE__} ncode [ncode...]"
+  puts "ncode2epub.rb ncode [ncode...]"
   exit
 end
 
