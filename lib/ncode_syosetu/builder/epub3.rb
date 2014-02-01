@@ -20,13 +20,18 @@ module NcodeSyosetu
               nav "toc.html"
 
               ordered do
+                next_heading = nil
                 novel.episodes.each do |episode|
                   if episode.is_a?(NcodeSyosetu::Model::Heading)
-                    heading episode.title
+                    next_heading = episode.title
                   else
                     html_path = "#{episode.number}.html"
                     File.write(html_path, episode.html)
                     file html_path
+                    if next_heading
+                      heading next_heading
+                      next_heading = nil
+                    end
                   end
                 end
               end
