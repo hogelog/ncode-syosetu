@@ -3,11 +3,12 @@ require "erb"
 module NcodeSyosetu
   module Model
     class Episode
-      attr_accessor :title, :body_html, :url
+      attr_accessor :title, :number, :body_html, :url
 
-      def initialize(title, page)
+      def initialize(title, number, page)
         @url = page.uri.to_s
         @title = title
+        @number = number
 
         @body_html =
           page.search(".novel_subtitle").to_html <<

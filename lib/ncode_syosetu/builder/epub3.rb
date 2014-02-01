@@ -15,17 +15,16 @@ module NcodeSyosetu
             date Time.now.to_s
 
             resources(workdir: tmpdir) do
-              File.write("toc.html", novel.toc.html)
+              toc_html = novel.toc.html.gsub(%r[<a href="/[^/]+/(\d+)/?">], '<a href="\1.html">')
+              File.write("toc.html", toc_html)
               nav "toc.html"
 
               ordered do
-                num = 0
                 novel.episodes.each do |episode|
                   if episode.is_a?(NcodeSyosetu::Model::Heading)
                     heading episode.title
                   else
-                    num += 1
-                    html_path = sprintf("%05d.html", num)
+                    html_path = "#{episode.number}.html"
                     File.write(html_path, episode.html)
                     file html_path
                   end

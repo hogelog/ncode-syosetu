@@ -33,7 +33,7 @@ module NcodeSyosetu
       sleep(@sleep)
       url = episode_url(ncode, number)
       @logger.info("GET #{url}...")
-      NcodeSyosetu::Model::Episode.new(title, @mechanize.get(url))
+      NcodeSyosetu::Model::Episode.new(title, number, @mechanize.get(url))
     end
 
     def toc_url(ncode)
