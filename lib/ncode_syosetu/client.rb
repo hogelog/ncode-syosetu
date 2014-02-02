@@ -3,6 +3,15 @@ require "logger"
 
 module NcodeSyosetu
   class Client
+    class NotFound < StandardError
+      attr_reader :url
+
+      def initialize(url, error_message = nil)
+        super(error_message)
+        @url = url
+      end
+    end
+
     def initialize(logger: Logger.new(STDOUT), sleep: 0.5)
       @mechanize = Mechanize.new
       @logger = logger
@@ -25,15 +34,12 @@ module NcodeSyosetu
 
     def get_toc(ncode)
       url = toc_url(ncode)
-      @logger.info("GET #{url}...")
-      NcodeSyosetu::Model::Toc.new(@mechanize.get(url))
+      NcodeSyosetu::Model::Toc.new(get_content(toc_url(ncode)))
     end
 
     def get_episode(ncode, title, number)
       sleep(@sleep)
-      url = episode_url(ncode, number)
-      @logger.info("GET #{url}...")
-      NcodeSyosetu::Model::Episode.new(title, number, @mechanize.get(url))
+      NcodeSyosetu::Model::Episode.new(title, number, get_content(episode_url(ncode, number)))
     end
 
     def toc_url(ncode)
@@ -42,6 +48,13 @@ module NcodeSyosetu
 
     def episode_url(ncode, number)
       "http://#{NcodeSyosetu::NCODE_HOST_NAME}/#{ncode}/#{number}"
+    end
+
+    private
+
+    def get_content(url)
+      @logger.info("GET #{url}...")
+      @mechanize.get(url)
     end
   end
 end

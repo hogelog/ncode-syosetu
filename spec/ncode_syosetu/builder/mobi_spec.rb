@@ -9,9 +9,9 @@ describe NcodeSyosetu::Builder::Epub3 do
   let(:novel) { NcodeSyosetu.client.get(ncode) }
 
   describe ".write" do
-    it "writes epub3" do
-      Tempfile.open("epub3") do |file|
-        NcodeSyosetu::Builder::Epub3.write(novel, file.path)
+    it "writes mobi" do
+      Tempfile.open("mobi") do |file|
+        NcodeSyosetu::Builder::Mobi.write(novel, file.path)
       end
     end
   end
