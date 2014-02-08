@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "mechanize", "~> 2.7.3"
+  spec.add_dependency "mechanize", "2.7.2"
   spec.add_dependency "gepub", "0.6.9.1"
   spec.add_dependency "kindlegen", "~> 2.9.0"
 
