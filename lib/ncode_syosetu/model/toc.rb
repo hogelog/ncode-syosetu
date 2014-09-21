@@ -10,7 +10,7 @@ module NcodeSyosetu
         @abstract = page.search(".novel_ex").text.chomp
 
         @episodes = []
-        page.search(".novel_sublist tr").each do |sub_item|
+        page.search(".novel_sublist2 dd").each do |sub_item|
           episode = { text: sub_item.text.gsub(/\s+/, " ").chomp }
           link = sub_item.search("a")
           unless link.empty?
