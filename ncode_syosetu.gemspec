@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "gepub", "0.6.9.1"
   spec.add_dependency "kindlegen", "~> 2.9.0"
 
-  spec.add_development_dependency "bundler", "~> 1.5.1"
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "pry"
