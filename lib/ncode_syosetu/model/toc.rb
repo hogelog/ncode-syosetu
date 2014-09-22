@@ -10,7 +10,8 @@ module NcodeSyosetu
         @abstract = page.search(".novel_ex").text.chomp
 
         @episodes = []
-        page.search(".novel_sublist2 dd").each do |sub_item|
+        page.at(".index_box").children.each do |sub_item|
+          next unless sub_item.matches?('.chapter_title, .novel_sublist2')
           episode = { text: sub_item.text.gsub(/\s+/, " ").chomp }
           link = sub_item.search("a")
           unless link.empty?
@@ -24,7 +25,7 @@ module NcodeSyosetu
         @body_html =
           page.search(".novel_writername").to_html <<
           page.search(".novel_ex").to_html <<
-          page.search(".novel_sublist").to_html
+          page.search(".index_box").to_html
       end
 
       def html
