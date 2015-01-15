@@ -1,4 +1,6 @@
 # ncode-syosetu
+[![Build Status](https://travis-ci.org/hogelog/ncode-syosetu.svg?branch=master)](https://travis-ci.org/hogelog/ncode-syosetu)
+[![Gem Version](https://badge.fury.io/rb/ncode-syosetu.svg)](http://badge.fury.io/rb/ncode-syosetu)
 
 ncode.syosetu.com content to epub converter.
 
