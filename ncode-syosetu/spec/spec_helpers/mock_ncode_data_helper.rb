@@ -1,14 +1,12 @@
 require 'webmock/rspec'
-require 'yard'
 
-DATA_DIR = File.expand_path('../../data', __FILE__)
+DATA_DIR = Pathname.new(File.expand_path('../../data', __FILE__))
 
 shared_context "with mock ncode data" do
   before do
     Dir.glob("#{DATA_DIR}/*").each do |ncode_dir|
-      ncode = File.relative_path(DATA_DIR, ncode_dir)
+      ncode = Pathname.new(ncode_dir).relative_path_from(DATA_DIR)
       Dir.glob("#{ncode_dir}/*").each do |html_path|
-        File.relative_path(ncode_dir, html_path)
         if html_path.end_with?("index.html")
           path = "#{ncode}"
         elsif html_path =~ /(\d+).html$/
