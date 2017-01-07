@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'ncode-syosetu-ssml'
+
+if ARGV.size == 0
+  puts "#$0 ncode episode_number"
+  exit
+end
+
+ncode, episode_number = ARGV
+
+episode = NcodeSyosetu.client.get_episode(ncode, "dummy_title", episode_number)
+File.write("#{ncode}-#{episode_number}.ssml", episode.ssml)
