@@ -18,6 +18,8 @@ describe NcodeSyosetu::Client do
       expect(subject.episodes[2]).to be_a(NcodeSyosetu::Model::Heading)
       expect(subject.episodes[3]).to be_a(NcodeSyosetu::Model::Episode)
       expect(subject.episodes[3].number).to eq(2)
+
+      expect(subject.episodes[1].ssml).to include("</speak>")
     end
   end
 end
