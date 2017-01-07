@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'ncode_syosetu'
+require 'ncode-syosetu-epub3'
 
 if ARGV.size == 0
-  puts "ncode2mobi.rb ncode [ncode...]"
+  puts "#$0 ncode [ncode...]"
   exit
 end
 
 ARGV.each do |ncode|
   novel = NcodeSyosetu.client.get(ncode)
-  novel.write_mobi("#{ncode}.mobi")
+  novel.write_epub3("#{ncode}.epub")
 end
