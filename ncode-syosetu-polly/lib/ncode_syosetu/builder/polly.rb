@@ -30,12 +30,15 @@ module NcodeSyosetu
 
         commands = []
 
-        ssmls.each_with_index do |ssml, i|
-          dirname = File.dirname(path)
-          basename = File.basename(path, ".mp3")
+        dirname = File.dirname(path)
+        basename = File.basename(path, ".mp3")
+        tmpdir = File.join(dirname, basename)
+        FileUtils.mkdir(tmpdir)
 
-          File.write(File.join(dirname, "#{basename}-#{i}.ssml"), ssml)
-          tmp_path = File.join(dirname, "#{basename}-#{i}.mp3")
+        ssmls.each_with_index do |ssml, i|
+
+          File.write(File.join(tmpdir, "#{basename}-#{i}.ssml"), ssml)
+          tmp_path = File.join(tmpdir, "#{basename}-#{i}.mp3")
           command = Expeditor::Command.new(service: service) do
             logger.info("#{tmp_path}...") if logger
             client.synthesize_speech(
