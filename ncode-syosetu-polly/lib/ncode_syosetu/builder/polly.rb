@@ -7,10 +7,11 @@ module NcodeSyosetu
     class Polly
       POLLY_TEXT_LENGTH_LIMIT = 1500
 
-      attr_reader :sample_rate, :client
+      attr_reader :sample_rate, :client, :logger
 
       def initialize(options={})
         options[:region] ||= "us-west-2"
+        @logger = options.delete(:logger)
         @sample_rate = options.delete(:sample_rate) || "16000"
         @client = Aws::Polly::Client.new(options)
       end
@@ -25,6 +26,7 @@ module NcodeSyosetu
 
           File.write(File.join(dirname, "#{basename}-#{i}.ssml"), ssml)
           tmp_path = File.join(dirname, "#{basename}-#{i}.mp3")
+          logger.info("#{tmp_path}...") if logger
           client.synthesize_speech(
             response_target: tmp_path,
             output_format: "mp3",

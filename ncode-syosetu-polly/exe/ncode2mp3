@@ -12,5 +12,5 @@ ncode, episode_number = ARGV
 
 episode = NcodeSyosetu.client.get_episode(ncode, "dummy_title", episode_number)
 
-builder = NcodeSyosetu::Builder::Polly.new
+builder = NcodeSyosetu::Builder::Polly.new(logger: Logger.new(STDOUT))
 builder.write_episode(episode, "#{ncode}-#{episode_number}.mp3")
