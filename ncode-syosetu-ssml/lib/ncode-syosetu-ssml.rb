@@ -5,9 +5,9 @@ NcodeSyosetu::Model::Episode.class_eval do
   def body_ssml
     Sanitize.
         fragment(body_html, elements: %w(br p div)).
-        gsub(%r(<br\s*/?>), "<break>").
+        gsub(%r(<br\s*/?>), "<break/>").
         gsub(%r(<(?:p|div)[^>]*>), '<p>').
-        gsub(%r(</(?:p|div)>), '<break strength="strong"/></p>')
+        gsub(%r(</(?:p|div)>), '</p>')
   end
 
   def ssml
