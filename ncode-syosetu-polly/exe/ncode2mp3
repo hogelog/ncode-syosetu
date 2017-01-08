@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'ncode-syosetu-polly'
+
+if ARGV.size == 0
+  puts "#$0 ncode episode_nubmer"
+  exit
+end
+
+ncode, episode_number = ARGV
+
+episode = NcodeSyosetu.client.get_episode(ncode, "dummy_title", episode_number)
+
+builder = NcodeSyosetu::Builder::Polly.new
+builder.write_episode(episode, "#{ncode}-#{episode_number}.mp3")
