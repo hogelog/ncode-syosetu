@@ -1,24 +1,34 @@
 require "aws-sdk-polly"
 require "sanitize"
 require "nokogiri"
+require "expeditor"
+require "concurrent"
 
 module NcodeSyosetu
   module Builder
     class Polly
       POLLY_TEXT_LENGTH_LIMIT = 1500
 
-      attr_reader :sample_rate, :client, :logger
+      attr_reader :sample_rate, :client, :logger, :service
 
       def initialize(options={})
         options[:region] ||= "us-west-2"
         @logger = options.delete(:logger)
         @sample_rate = options.delete(:sample_rate) || "16000"
         @client = Aws::Polly::Client.new(options)
+        @service = Expeditor::Service.new(
+          executor: Concurrent::ThreadPoolExecutor.new(
+            min_threads: 0,
+            max_threads: 10,
+          )
+        )
       end
 
       def write_episode(episode, path)
         tmp_files = []
         ssmls = split_ssml(episode.body_ssml.gsub("\n", "")).map{|body_ssml| create_ssml(body_ssml) }
+
+        commands = []
 
         ssmls.each_with_index do |ssml, i|
           dirname = File.dirname(path)
@@ -26,17 +36,22 @@ module NcodeSyosetu
 
           File.write(File.join(dirname, "#{basename}-#{i}.ssml"), ssml)
           tmp_path = File.join(dirname, "#{basename}-#{i}.mp3")
-          logger.info("#{tmp_path}...") if logger
-          client.synthesize_speech(
-            response_target: tmp_path,
-            output_format: "mp3",
-            sample_rate: sample_rate,
-            text: ssml,
-            text_type: "ssml",
-            voice_id: "Mizuki",
-          )
+          command = Expeditor::Command.new(service: service) do
+            logger.info("#{tmp_path}...") if logger
+            client.synthesize_speech(
+              response_target: tmp_path,
+              output_format: "mp3",
+              sample_rate: sample_rate,
+              text: ssml,
+              text_type: "ssml",
+              voice_id: "Mizuki",
+            )
+          end
+          command.start
+          commands << command
           tmp_files << tmp_path
         end
+        commands.each{|command| command.get }
         File.open(path, "wb") do |file|
           tmp_files.each do |tmp_path|
             File.open(tmp_path, "rb") do |tmp_file|
@@ -45,6 +60,7 @@ module NcodeSyosetu
           end
           file.flush
         end
+        logger.info("Generated: #{path}") if logger
       end
 
       def create_ssml(body_ssml)
