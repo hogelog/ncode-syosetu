@@ -11,6 +11,7 @@ ncode.syosetu.com content converter.
 
 ## Usage
 ```
-$ ncode2epub n0000aa # http://ncode.syosetu/com/n0000aa -> n0000aa.epub
-$ ncode2mobi n0000aa # http://ncode.syosetu/com/n0000aa -> n0000aa.mobi
+$ ncode2epub n0000aa # http://ncode.syosetu.com/n0000aa -> n0000aa.epub
+$ ncode2mobi n0000aa # http://ncode.syosetu.com/n0000aa -> n0000aa.mobi
+$ ncode2mp3 n0000aa 1 # http://ncode.syosetu.com/n0000aa/1/ -> n0000aa-1.mp3
 ```
