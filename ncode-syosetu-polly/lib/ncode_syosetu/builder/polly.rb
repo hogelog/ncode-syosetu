@@ -15,11 +15,12 @@ module NcodeSyosetu
         options[:region] ||= "us-west-2"
         @logger = options.delete(:logger)
         @sample_rate = options.delete(:sample_rate) || "16000"
+        @max_threads = options.delete(:max_threads) || 10
         @client = Aws::Polly::Client.new(options)
         @service = Expeditor::Service.new(
           executor: Concurrent::ThreadPoolExecutor.new(
             min_threads: 0,
-            max_threads: 10,
+            max_threads: @max_threads,
           )
         )
       end
@@ -33,22 +34,26 @@ module NcodeSyosetu
         dirname = File.dirname(path)
         basename = File.basename(path, ".mp3")
         tmpdir = File.join(dirname, basename)
-        FileUtils.mkdir(tmpdir)
+        FileUtils.mkdir_p(tmpdir)
 
         ssmls.each_with_index do |ssml, i|
-
           File.write(File.join(tmpdir, "#{basename}-#{i}.ssml"), ssml)
           tmp_path = File.join(tmpdir, "#{basename}-#{i}.mp3")
           command = Expeditor::Command.new(service: service) do
             logger.info("#{tmp_path}...") if logger
-            client.synthesize_speech(
-              response_target: tmp_path,
-              output_format: "mp3",
-              sample_rate: sample_rate,
-              text: ssml,
-              text_type: "ssml",
-              voice_id: "Mizuki",
-            )
+            begin
+              client.synthesize_speech(
+                response_target: tmp_path,
+                output_format: "mp3",
+                sample_rate: sample_rate,
+                text: ssml,
+                text_type: "ssml",
+                voice_id: "Mizuki",
+              )
+            rescue => e
+              logger.error("#{e.message}\n#{ssml}")
+              raise e
+            end
           end
           command.start
           commands << command
