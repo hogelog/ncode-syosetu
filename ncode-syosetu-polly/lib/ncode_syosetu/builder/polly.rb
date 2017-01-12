@@ -7,7 +7,7 @@ require "concurrent"
 module NcodeSyosetu
   module Builder
     class Polly
-      POLLY_TEXT_LENGTH_LIMIT = 1500
+      POLLY_TEXT_LENGTH_LIMIT = 1000
 
       attr_reader :sample_rate, :client, :logger, :service
 
