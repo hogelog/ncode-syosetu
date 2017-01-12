@@ -37,7 +37,8 @@ module NcodeSyosetu
         FileUtils.mkdir_p(tmpdir)
 
         ssmls.each_with_index do |ssml, i|
-          File.write(File.join(tmpdir, "#{basename}-#{i}.ssml"), ssml)
+          tmp_ssml_path = File.join(tmpdir, "#{basename}-#{i}.ssml")
+          File.write(tmp_ssml_path, ssml)
           tmp_path = File.join(tmpdir, "#{basename}-#{i}.mp3")
           command = Expeditor::Command.new(service: service) do
             logger.info("#{tmp_path}...") if logger
@@ -52,6 +53,7 @@ module NcodeSyosetu
               )
             rescue => e
               logger.error("#{e.message}\n#{ssml}")
+              logger.error("#{e.message}: #{tmp_ssml_path}\n#{ssml}")
               raise e
             end
           end
