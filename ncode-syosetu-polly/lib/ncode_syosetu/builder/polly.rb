@@ -93,12 +93,15 @@ module NcodeSyosetu
         while elements.size > 0 do
           element = elements.shift
 
-          unless element.is_a?(Nokogiri::XML::Text) || element.is_a?(String)
+          case element
+            when Nokogiri::XML::Text
+              text = element.text
+            when String
+            text = element
+            else
             buffer.print(element.to_s)
             next
           end
-
-          text = element.to_s
 
           if text.size > POLLY_TEXT_LENGTH_LIMIT
             elements = text.chars.each_slice(POLLY_TEXT_LENGTH_LIMIT).map(&:join) + elements
@@ -110,7 +113,7 @@ module NcodeSyosetu
             buffer = StringIO.new
             text_count = 0
           end
-          buffer.print(element.to_s)
+          buffer.print(text)
           text_count += text.size
         end
         results << buffer.string if buffer.size > 0
