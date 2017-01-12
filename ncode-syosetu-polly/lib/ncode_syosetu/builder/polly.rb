@@ -3,6 +3,7 @@ require "sanitize"
 require "nokogiri"
 require "expeditor"
 require "concurrent"
+require "htmlentities"
 
 module NcodeSyosetu
   module Builder
@@ -17,6 +18,7 @@ module NcodeSyosetu
         @sample_rate = options.delete(:sample_rate) || "16000"
         @max_threads = options.delete(:max_threads) || 10
         @client = Aws::Polly::Client.new(options)
+        @htmlentities = HTMLEntities.new
         @service = Expeditor::Service.new(
           executor: Concurrent::ThreadPoolExecutor.new(
             min_threads: 0,
@@ -95,12 +97,12 @@ module NcodeSyosetu
 
           case element
             when Nokogiri::XML::Text
-              text = element.text
+              text = @htmlentities.encode(element.text)
             when String
-            text = element
+              text = @htmlentities.encode(element)
             else
-            buffer.print(element.to_s)
-            next
+              buffer.print(element.to_s)
+              next
           end
 
           if text.size > POLLY_TEXT_LENGTH_LIMIT
