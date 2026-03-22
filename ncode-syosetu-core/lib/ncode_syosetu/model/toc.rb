@@ -6,12 +6,12 @@ module NcodeSyosetu
       def initialize(page)
         @url = page.uri.to_s
         @title = page.title
-        @author = page.search(".novel_writername").text.chomp
-        @abstract = page.search(".novel_ex").text.chomp
+        @author = page.search(".p-novel__author").text.chomp
+        @abstract = page.search(".p-novel__summary").text.chomp
 
         @episodes = []
-        page.at(".index_box").children.each do |sub_item|
-          next unless sub_item.matches?('.chapter_title, .novel_sublist2')
+        page.at(".p-eplist").children.each do |sub_item|
+          next unless sub_item.matches?('.p-eplist__chapter-title, .p-eplist__sublist')
           episode = { text: sub_item.text.gsub(/\s+/, " ").chomp }
           link = sub_item.search("a")
           unless link.empty?
@@ -23,9 +23,9 @@ module NcodeSyosetu
         end
 
         @body_html =
-          page.search(".novel_writername").to_html <<
-          page.search(".novel_ex").to_html <<
-          page.search(".index_box").to_html
+          page.search(".p-novel__author").to_html <<
+          page.search(".p-novel__summary").to_html <<
+          page.search(".p-eplist").to_html
       end
 
       def html

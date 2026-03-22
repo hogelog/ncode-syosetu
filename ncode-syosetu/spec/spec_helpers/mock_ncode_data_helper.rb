@@ -12,7 +12,7 @@ shared_context "with mock ncode data" do
         elsif html_path =~ /(\d+).html$/
           path = "#{ncode}/#{$1}"
         end
-        WebMock.stub_request(:get, "http://#{NcodeSyosetu::NCODE_HOST_NAME}/#{path}").
+        WebMock.stub_request(:get, "https://#{NcodeSyosetu::NCODE_HOST_NAME}/#{path}").
           to_return(body: File.new(html_path), status: 200, headers: { 'Content-Type' => 'text/html' })
       end
     end
