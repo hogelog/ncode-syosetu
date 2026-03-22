@@ -1,8 +1,6 @@
 require "aws-sdk-polly"
 require "sanitize"
 require "nokogiri"
-require "expeditor"
-require "concurrent"
 require "htmlentities"
 
 module NcodeSyosetu
@@ -10,7 +8,7 @@ module NcodeSyosetu
     class Polly
       POLLY_TEXT_LENGTH_LIMIT = 1000
 
-      attr_reader :sample_rate, :client, :logger, :service
+      attr_reader :sample_rate, :client, :logger
 
       def initialize(options={})
         options[:region] ||= "us-west-2"
@@ -19,51 +17,56 @@ module NcodeSyosetu
         @max_threads = options.delete(:max_threads) || 10
         @client = Aws::Polly::Client.new(options)
         @htmlentities = HTMLEntities.new
-        @service = Expeditor::Service.new(
-          executor: Concurrent::ThreadPoolExecutor.new(
-            min_threads: 0,
-            max_threads: @max_threads,
-          )
-        )
       end
 
       def write_episode(episode, path)
         tmp_files = []
         ssmls = split_ssml(episode.body_ssml.gsub("\n", "")).map{|body_ssml| create_ssml(body_ssml) }
 
-        commands = []
-
         dirname = File.dirname(path)
         basename = File.basename(path, ".mp3")
         tmpdir = File.join(dirname, basename)
         FileUtils.mkdir_p(tmpdir)
 
+        queue = Queue.new
+        errors = Queue.new
+
         ssmls.each_with_index do |ssml, i|
           tmp_ssml_path = File.join(tmpdir, "#{basename}-#{i}.ssml")
           File.write(tmp_ssml_path, ssml)
           tmp_path = File.join(tmpdir, "#{basename}-#{i}.mp3")
-          command = Expeditor::Command.new(service: service) do
-            logger.info("#{tmp_path}...") if logger
-            begin
-              client.synthesize_speech(
-                response_target: tmp_path,
-                output_format: "mp3",
-                sample_rate: sample_rate,
-                text: ssml,
-                text_type: "ssml",
-                voice_id: "Mizuki",
-              )
-            rescue => e
-              logger.error("#{e.message}\n#{ssml}")
-              logger.error("#{e.message}: #{tmp_ssml_path}\n#{ssml}")
-              raise e
-            end
-          end
-          command.start
-          commands << command
+          queue << [ssml, tmp_ssml_path, tmp_path]
           tmp_files << tmp_path
         end
-        commands.each{|command| command.get }
+
+        workers_count = [@max_threads, queue.size].min
+        workers_count.times { queue << nil }
+
+        workers = workers_count.times.map do
+          Thread.new do
+            while (item = queue.pop)
+              ssml, tmp_ssml_path, tmp_path = item
+              logger.info("#{tmp_path}...") if logger
+              begin
+                client.synthesize_speech(
+                  response_target: tmp_path,
+                  output_format: "mp3",
+                  sample_rate: sample_rate,
+                  text: ssml,
+                  text_type: "ssml",
+                  voice_id: "Mizuki",
+                )
+              rescue => e
+                logger.error("#{e.message}: #{tmp_ssml_path}\n#{ssml}") if logger
+                errors << e
+              end
+            end
+          end
+        end
+        workers.each(&:join)
+
+        raise errors.pop unless errors.empty?
+
         File.open(path, "wb") do |file|
           tmp_files.each do |tmp_path|
             File.open(tmp_path, "rb") do |tmp_file|
