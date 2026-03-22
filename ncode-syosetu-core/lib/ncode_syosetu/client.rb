@@ -12,10 +12,16 @@ module NcodeSyosetu
       end
     end
 
-    def initialize(logger: Logger.new(STDOUT), sleep: 0.5)
+    def initialize(host: NcodeSyosetu::NCODE_HOST_NAME, logger: Logger.new(STDOUT), sleep: 0.5)
+      @host = host
       @mechanize = Mechanize.new
       @logger = logger
       @sleep = sleep
+
+      if @host == NcodeSyosetu::NOVEL18_HOST_NAME
+        cookie = Mechanize::Cookie.new("over18", "yes", domain: ".syosetu.com", path: "/", expires: Time.now + 86400 * 365)
+        @mechanize.cookie_jar.add(cookie)
+      end
     end
 
     def get(ncode)
@@ -43,11 +49,11 @@ module NcodeSyosetu
     end
 
     def toc_url(ncode)
-      "https://#{NcodeSyosetu::NCODE_HOST_NAME}/#{ncode}"
+      "https://#{@host}/#{ncode}"
     end
 
     def episode_url(ncode, number)
-      "https://#{NcodeSyosetu::NCODE_HOST_NAME}/#{ncode}/#{number}"
+      "https://#{@host}/#{ncode}/#{number}"
     end
 
     private

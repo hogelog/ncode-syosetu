@@ -8,7 +8,8 @@ if ARGV.size == 0
   exit
 end
 
-ncode, episode_number = ARGV
+arg, episode_number = ARGV
+parsed = NcodeSyosetu.parse_url(arg)
 
-episode = NcodeSyosetu.client.get_episode(ncode, "dummy_title", episode_number)
-File.write("#{ncode}-#{episode_number}.ssml", episode.ssml)
+episode = NcodeSyosetu.client(host: parsed[:host]).get_episode(parsed[:ncode], "dummy_title", episode_number)
+File.write("#{parsed[:ncode]}-#{episode_number}.ssml", episode.ssml)

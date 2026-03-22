@@ -8,7 +8,8 @@ if ARGV.size == 0
   exit
 end
 
-ARGV.each do |ncode|
-  novel = NcodeSyosetu.client.get(ncode)
-  novel.write_epub3("#{ncode}.epub")
+ARGV.each do |arg|
+  parsed = NcodeSyosetu.parse_url(arg)
+  novel = NcodeSyosetu.client(host: parsed[:host]).get(parsed[:ncode])
+  novel.write_epub3("#{parsed[:ncode]}.epub")
 end

@@ -8,9 +8,10 @@ if ARGV.size == 0
   exit
 end
 
-ncode, episode_number = ARGV
+arg, episode_number = ARGV
+parsed = NcodeSyosetu.parse_url(arg)
 
-episode = NcodeSyosetu.client.get_episode(ncode, "dummy_title", episode_number)
+episode = NcodeSyosetu.client(host: parsed[:host]).get_episode(parsed[:ncode], "dummy_title", episode_number)
 
 builder = NcodeSyosetu::Builder::Polly.new(logger: Logger.new(STDOUT))
-builder.write_episode(episode, "#{ncode}-#{episode_number}.mp3")
+builder.write_episode(episode, "#{parsed[:ncode]}-#{episode_number}.mp3")
