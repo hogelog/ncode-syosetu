@@ -20,12 +20,12 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "ncode-syosetu-core", GEM_VERSION
   spec.add_dependency "ncode-syosetu-ssml", GEM_VERSION
-  spec.add_dependency "aws-sdk-polly", "1.0.0.rc2"
-  spec.add_dependency "sanitize", "~> 4.4"
+  spec.add_dependency "aws-sdk-polly", "~> 1.122"
+  spec.add_dependency "sanitize", "~> 7.0"
   spec.add_dependency "nokogiri", ">= 1.6"
-  spec.add_dependency "expeditor", "~> 0.5.0"
+  spec.add_dependency "expeditor", "~> 0.7"
   spec.add_dependency "htmlentities"
 
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "rspec", "~> 3.13"
 end

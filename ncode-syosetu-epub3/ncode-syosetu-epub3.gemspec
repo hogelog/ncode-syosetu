@@ -19,8 +19,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "ncode-syosetu-core", GEM_VERSION
-  spec.add_dependency "gepub", "~> 0.6.9"
+  spec.add_dependency "gepub", "~> 2.0"
 
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "rspec", "~> 3.13"
 end
