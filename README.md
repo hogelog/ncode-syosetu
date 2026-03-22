@@ -1,5 +1,5 @@
 # ncode-syosetu
-[![Build Status](https://travis-ci.org/hogelog/ncode-syosetu.svg?branch=master)](https://travis-ci.org/hogelog/ncode-syosetu)
+[![Test](https://github.com/hogelog/ncode-syosetu/actions/workflows/test.yml/badge.svg)](https://github.com/hogelog/ncode-syosetu/actions/workflows/test.yml)
 [![Gem Version](https://badge.fury.io/rb/ncode-syosetu.svg)](http://badge.fury.io/rb/ncode-syosetu)
 
 ncode.syosetu.com content converter.
