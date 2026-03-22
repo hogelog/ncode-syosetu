@@ -1,7 +1,7 @@
 DIRS = %w(
   ncode-syosetu-core
   ncode-syosetu-epub3
-  ncode-syosetu-mobi
+
   ncode-syosetu-ssml
   ncode-syosetu-polly
   ncode-syosetu

@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "ncode-syosetu-core", GEM_VERSION
   spec.add_dependency "ncode-syosetu-epub3", GEM_VERSION
-  spec.add_dependency "ncode-syosetu-mobi", GEM_VERSION
+
   spec.add_dependency "ncode-syosetu-ssml", GEM_VERSION
   spec.add_dependency "ncode-syosetu-polly", GEM_VERSION
 
