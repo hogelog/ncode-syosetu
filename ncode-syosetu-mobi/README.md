@@ -1,41 +1,10 @@
-# Ncode::Syosetu::Mobi
+# ncode-syosetu-mobi (Deprecated)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/ncode/syosetu/mobi`. To experiment with that code, run `bin/console` for an interactive prompt.
+This sub-gem has been deprecated.
 
-TODO: Delete this and the text above, and describe your gem
+Amazon discontinued kindlegen in 2020, making mobi file generation no longer possible.
+Kindle Previewer does not provide Linux binaries, so there is no viable alternative.
 
-## Installation
+- https://github.com/tdtds/kindlegen/issues/42
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'ncode-syosetu-mobi'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install ncode-syosetu-mobi
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/ncode-syosetu-mobi.
-
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
+Use [ncode-syosetu-epub3](../ncode-syosetu-epub3) for ebook output instead.
