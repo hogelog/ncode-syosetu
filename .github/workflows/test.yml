@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby-version: ['3.3', '3.4', '4.0']
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: false
+
+      - name: Install dependencies
+        working-directory: ncode-syosetu
+        run: bundle install
+
+      - name: Run tests
+        working-directory: ncode-syosetu
+        run: bundle exec rspec
