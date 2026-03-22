@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'ncode-syosetu-core'
+
+if ARGV.size == 0
+  puts "#$0 ncode [ncode...]"
+  exit
+end
+
+ARGV.each do |arg|
+  parsed = NcodeSyosetu.parse_url(arg)
+  novel = NcodeSyosetu.client(host: parsed[:host]).get(parsed[:ncode])
+  File.write("#{parsed[:ncode]}.md", novel.markdown)
+end
