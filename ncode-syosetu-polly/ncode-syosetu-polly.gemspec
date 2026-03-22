@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "expeditor", "~> 0.5.0"
   spec.add_dependency "htmlentities"
 
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry"
 end
