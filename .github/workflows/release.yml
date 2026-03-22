@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Build gems
+        run: |
+          cd ncode-syosetu-core && gem build ncode-syosetu-core.gemspec && cd ..
+          cd ncode-syosetu-epub3 && gem build ncode-syosetu-epub3.gemspec && cd ..
+          cd ncode-syosetu-ssml && gem build ncode-syosetu-ssml.gemspec && cd ..
+          cd ncode-syosetu-polly && gem build ncode-syosetu-polly.gemspec && cd ..
+          cd ncode-syosetu && gem build ncode-syosetu.gemspec && cd ..
+
+      - name: Configure RubyGems credentials
+        uses: rubygems/configure-rubygems-credentials@v1.0.0
+
+      - name: Push to RubyGems
+        run: |
+          gem push ncode-syosetu-core/ncode-syosetu-core-*.gem
+          gem push ncode-syosetu-epub3/ncode-syosetu-epub3-*.gem
+          gem push ncode-syosetu-ssml/ncode-syosetu-ssml-*.gem
+          gem push ncode-syosetu-polly/ncode-syosetu-polly-*.gem
+          gem push ncode-syosetu/ncode-syosetu-*.gem
