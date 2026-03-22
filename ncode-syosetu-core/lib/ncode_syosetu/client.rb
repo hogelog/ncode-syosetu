@@ -43,11 +43,11 @@ module NcodeSyosetu
     end
 
     def toc_url(ncode)
-      "http://#{NcodeSyosetu::NCODE_HOST_NAME}/#{ncode}"
+      "https://#{NcodeSyosetu::NCODE_HOST_NAME}/#{ncode}"
     end
 
     def episode_url(ncode, number)
-      "http://#{NcodeSyosetu::NCODE_HOST_NAME}/#{ncode}/#{number}"
+      "https://#{NcodeSyosetu::NCODE_HOST_NAME}/#{ncode}/#{number}"
     end
 
     private
