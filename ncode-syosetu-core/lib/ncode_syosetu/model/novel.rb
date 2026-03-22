@@ -15,6 +15,31 @@ module NcodeSyosetu
           end
         EOS
       end
+
+      def text
+        lines = []
+        lines << title
+        lines << author
+        lines << ""
+        episodes.each do |episode|
+          lines << episode.text
+          lines << ""
+        end
+        lines.join("\n")
+      end
+
+      def markdown
+        lines = []
+        lines << "# #{title}"
+        lines << ""
+        lines << "*#{author}*"
+        lines << ""
+        episodes.each do |episode|
+          lines << episode.markdown
+          lines << ""
+        end
+        lines.join("\n")
+      end
     end
   end
 end

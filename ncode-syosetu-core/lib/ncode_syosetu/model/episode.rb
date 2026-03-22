@@ -1,4 +1,5 @@
 require "erb"
+require "nokogiri"
 
 module NcodeSyosetu
   module Model
@@ -31,6 +32,51 @@ module NcodeSyosetu
 </body>
 </html>
         HTML
+      end
+
+      def text
+        doc = Nokogiri::HTML.fragment(@body_html)
+        lines = []
+        lines << doc.at(".p-novel__title")&.text&.strip
+        doc.search(".p-novel__text p").each do |p|
+          lines << p.text
+        end
+        lines.compact.join("\n")
+      end
+
+      def markdown
+        doc = Nokogiri::HTML.fragment(@body_html)
+        lines = []
+        title_text = doc.at(".p-novel__title")&.text&.strip
+        lines << "## #{title_text}" if title_text
+        lines << ""
+        doc.search(".p-novel__text p").each do |p|
+          lines << ruby_to_markdown(p)
+        end
+        lines.join("\n")
+      end
+
+      private
+
+      def ruby_to_markdown(node)
+        result = +""
+        node.children.each do |child|
+          case child.name
+          when "ruby"
+            base = child.search("rb").first&.text || child.children.select(&:text?).map(&:text).join
+            rt = child.at("rt")&.text
+            if rt && !rt.empty?
+              result << "#{base}（#{rt}）"
+            else
+              result << base
+            end
+          when "text"
+            result << child.text
+          else
+            result << child.text
+          end
+        end
+        result
       end
     end
   end
