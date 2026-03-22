@@ -25,6 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "ncode-syosetu-polly", GEM_VERSION
 
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "webmock", "~> 2.3"
+  spec.add_development_dependency "rspec", "~> 3.13"
+  spec.add_development_dependency "webmock", "~> 3.26"
 end
