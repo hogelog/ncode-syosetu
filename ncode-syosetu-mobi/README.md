@@ -1,10 +1,10 @@
-# ncode-syosetu-mobi (廃止)
+# ncode-syosetu-mobi (Deprecated)
 
-このサブgemは廃止されました。
+This sub-gem has been deprecated.
 
-Amazon kindlegen が2020年に配布終了となり、mobi ファイルの生成ができなくなったためです。
-Kindle Previewer には Linux バイナリが存在せず、代替手段もありません。
+Amazon discontinued kindlegen in 2020, making mobi file generation no longer possible.
+Kindle Previewer does not provide Linux binaries, so there is no viable alternative.
 
 - https://github.com/tdtds/kindlegen/issues/42
 
-epub 形式での出力には [ncode-syosetu-epub3](../ncode-syosetu-epub3) を使用してください。
+Use [ncode-syosetu-epub3](../ncode-syosetu-epub3) for ebook output instead.
