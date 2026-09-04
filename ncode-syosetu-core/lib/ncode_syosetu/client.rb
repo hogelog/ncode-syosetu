@@ -27,13 +27,18 @@ module NcodeSyosetu
     def get(ncode)
       toc = get_toc(ncode)
 
-      episodes = toc.episodes.map do |episode|
-        if episode[:number]
-          get_episode(ncode, episode[:text], episode[:number])
+      episodes =
+        if toc.short_story?
+          [toc.to_episode]
         else
-          NcodeSyosetu::Model::Heading.new(episode[:text])
+          toc.episodes.map do |episode|
+            if episode[:number]
+              get_episode(ncode, episode[:text], episode[:number])
+            else
+              NcodeSyosetu::Model::Heading.new(episode[:text])
+            end
+          end
         end
-      end
 
       NcodeSyosetu::Model::Novel.new(toc, episodes)
     end

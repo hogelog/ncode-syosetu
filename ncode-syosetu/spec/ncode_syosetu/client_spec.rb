@@ -11,6 +11,7 @@ describe NcodeSyosetu::Client do
 
     it "scrapes ncode novel" do
       expect(subject.toc.title).to eq("たいとる")
+      expect(subject.toc.short_story?).to be(false)
       expect(subject.episodes.size).to eq(4)
       expect(subject.episodes[0]).to be_a(NcodeSyosetu::Model::Heading)
       expect(subject.episodes[1]).to be_a(NcodeSyosetu::Model::Episode)
@@ -20,6 +21,25 @@ describe NcodeSyosetu::Client do
       expect(subject.episodes[3].number).to eq(2)
 
       expect(subject.episodes[1].ssml).to include("</speak>")
+    end
+  end
+
+  context "with short story ncode" do
+    let(:ncode) { "n00001" }
+
+    describe "#get" do
+      subject { NcodeSyosetu.client.get(ncode) }
+
+      it "scrapes ncode short story" do
+        expect(subject.toc.title).to eq("たんぺん")
+        expect(subject.toc.short_story?).to be(true)
+        expect(subject.episodes.size).to eq(1)
+        expect(subject.episodes[0]).to be_a(NcodeSyosetu::Model::Episode)
+        expect(subject.episodes[0].number).to eq(1)
+        expect(subject.episodes[0].text).to include("本文")
+
+        expect(subject.episodes[0].ssml).to include("</speak>")
+      end
     end
   end
 end
